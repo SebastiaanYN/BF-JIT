@@ -5,9 +5,6 @@
 
 .global brainfuck
 
-# Uncomment to write the JIT code to a file
-.equ DEBUG, 1
-
 .bss
 CELLS: .skip 100000 # cells to operate on
 INSTRUCTIONS: .skip 200000 # machine code instructions of the brainfuck
@@ -16,10 +13,10 @@ INSTRUCTIONS: .skip 200000 # machine code instructions of the brainfuck
 newline: .asciz "\n"
 
 # If DEBUG is defined we declare the file name and file mode
-.ifdef DEBUG
+#ifdef DEBUG
 	filename: .asciz "jit.out"
 	filemode: .asciz "wb"
-.endif
+#endif
 
 # character constants
 .equ CHAR_NUL, 0x0
@@ -400,7 +397,7 @@ execute:
 	pushq %rdi # store the instruction size on the stack
 
 	# If DEBUG is defined the JIT code should be written to a file
-	.ifdef DEBUG
+	#ifdef DEBUG
 		# open file
 		movq $filemode, %rsi # mode
 		movq $filename, %rdi # name
@@ -422,7 +419,7 @@ execute:
 
 		# remove file from stack
 		popq %rax
-	.endif
+	#endif
 
 	# allocate RW memory
 	movq $0, %r9 # offset
